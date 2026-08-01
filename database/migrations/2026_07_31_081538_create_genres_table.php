@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->timestamps();
-            $table->unique(['book_id', 'genre_id']);
         });
     }
 
