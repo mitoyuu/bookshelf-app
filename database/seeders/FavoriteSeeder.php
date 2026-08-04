@@ -97,7 +97,7 @@ class FavoriteSeeder extends Seeder
             ],
             [
                 'email' => 'takahashi@example.com',
-                'book' => 'FUCTFULNESS',
+                'book' => 'FACTFULNESS',
             ],
             [
                 'email' => 'takahashi@example.com',
