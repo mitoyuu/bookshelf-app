@@ -3,6 +3,7 @@
 @endphp
 
 @csrf
+{{-- 書籍登録画面 --}}
 <div class="space-y-6">
     <!-- タイトル -->
     <div>
