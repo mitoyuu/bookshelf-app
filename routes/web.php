@@ -18,15 +18,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 // 公開ページ
 Route::resource('books', BookController::class)
     ->only(['index', 'show']);
 
-Route::get('/ranking', [RankingController::class, 'index']);
+Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index');
 
 // ログイン必須
 Route::middleware('auth')->group(function () {
