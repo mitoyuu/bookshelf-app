@@ -16,9 +16,9 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnDelete();
 
+            // 書籍がある場合は削除不可
             $table->foreignId('genre_id')
-                ->constrained()
-                ->cascadeOnDelete();
+                ->constrained();
 
             $table->timestamps();
 
