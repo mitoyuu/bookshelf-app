@@ -28,7 +28,7 @@ return [
         'title' => 'タイトル',
         'author' => '著者名',
         'isbn' => 'ISBN',
-        'published_at' => '出版日',
+        'published_date' => '出版日',
         'description' => '説明',
         'image_url' => '画像URL',
         'genres' => 'ジャンル',

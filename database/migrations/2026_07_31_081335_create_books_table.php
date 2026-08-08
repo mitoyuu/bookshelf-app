@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('title'); // タイトル
             $table->string('author'); // 著者名
             $table->char('isbn', 13)->unique(); // ISBN13桁で一意で良いのか？
-            $table->date('published_at'); // 出版日
+            $table->date('published_date'); // 出版日
             $table->text('description')->nullable(); // 説明（NULL許可）
             $table->string('image_url', 2048)->nullable();
             $table->timestamps();

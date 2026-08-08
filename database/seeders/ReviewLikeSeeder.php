@@ -109,7 +109,7 @@ class ReviewLikeSeeder extends Seeder
                 if ($user->id !== $review->user_id) {
 
                     // 3. そのレビューに対して、いいねを追加する（すでに登録済みのいいねは消さない）
-                    $review->likedUsers()->syncWithoutDetaching([$user->id]);
+                    $review->likedByUsers()->syncWithoutDetaching([$user->id]);
                 }
             }
         }
