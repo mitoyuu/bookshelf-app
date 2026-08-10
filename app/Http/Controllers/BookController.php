@@ -33,7 +33,7 @@ class BookController extends Controller
             'title' => $validated['title'],
             'author' => $validated['author'],
             'isbn' => $validated['isbn'],
-            'published_date' => $validated['published_date'] ?? null,
+            'published_date' => $validated['published_date'],
             'description' => $validated['description'] ?? null,
             'image_url' => $validated['image_url'] ?? null,
         ]);
@@ -65,12 +65,14 @@ class BookController extends Controller
             'title' => $validated['title'],
             'author' => $validated['author'],
             'isbn' => $validated['isbn'],
-            'published_date' => $validated['published_date'] ?? null,
+            'published_date' => $validated['published_date'],
             'description' => $validated['description'] ?? null,
             'image_url' => $validated['image_url'] ?? null,
         ]);
 
         $book->genres()->sync($validated['genres'] ?? []);
+
+        $this->authorize('update', $book);
 
         return redirect()->route('books.show', $book)->with('success', '書籍を更新しました。');
     }
@@ -78,6 +80,8 @@ class BookController extends Controller
     public function destroy(Book $book): RedirectResponse
     {
         $book->delete();
+
+        $this->authorize('delete', $book);
 
         return redirect()->route('books.index')->with('success', '書籍を削除しました。');
     }

@@ -12,6 +12,8 @@ return [
     'unique' => 'その:attributeは既に使用されています。',
     'exists' => '選択された:attributeは存在しません。',
     'in' => '選択された:attributeは正しくありません。',
+    'digits' => ':attributeは:digits桁の数字で入力してください。',
+    'url' => ':attributeは正しいURL形式で入力してください。',
     'max' => [
         'string' => ':attributeは:max文字以内で入力してください。',
         'numeric' => ':attributeは:max以下で指定してください。',
@@ -32,7 +34,6 @@ return [
         'description' => '説明',
         'image_url' => '画像URL',
         'genres' => 'ジャンル',
-
         'per_page' => '1ページあたりの件数',
         'page' => 'ページ番号',
         'user_id' => '登録者',
