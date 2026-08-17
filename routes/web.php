@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\BookController;
-use App\Http\Controllers\RankingController;
-use App\Http\Controllers\GenreController;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\GenreController;
+use App\Http\Controllers\RankingController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->group(function () {
 
     Route::resource('books', BookController::class)
-        ->except(['index', 'show']); //ゲスト
+        ->except(['index', 'show']); // ゲスト
 
     Route::resource('genres', GenreController::class);
 
@@ -40,9 +40,15 @@ Route::middleware('auth')->group(function () {
     // いいね
     Route::post('/reviews/{review}/like', [ReviewController::class, 'toggle'])
         ->name('reviews.like');
+    // routes/web.php （または routes/api.php）
+    // Route::middleware(['auth'])->group(function () {
+    //     Route::post('/reviews/{review}/like', [ReviewController::class, 'toggle'])->name('reviews.like.toggle');
+    // });
 
     Route::resource('reviews', ReviewController::class)
-        ->only(['store', 'edit', 'update', 'destroy']);
+        ->only(['edit', 'update', 'destroy']);
+    Route::post('/books/{book}/reviews', [ReviewController::class, 'store'])
+        ->name('reviews.store');
 });
 
 // ゲストも閲覧可能

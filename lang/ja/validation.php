@@ -1,4 +1,5 @@
 <?php
+
 // lang/ja/validation.php
 
 return [
@@ -34,6 +35,8 @@ return [
         'description' => '説明',
         'image_url' => '画像URL',
         'genres' => 'ジャンル',
+        'rating' => '評価',
+        'comment' => 'コメント',
         'per_page' => '1ページあたりの件数',
         'page' => 'ページ番号',
         'user_id' => '登録者',

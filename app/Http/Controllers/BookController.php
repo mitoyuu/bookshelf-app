@@ -61,6 +61,8 @@ class BookController extends Controller
     {
         $validated = $request->validated();
 
+        $this->authorize('update', $book);
+
         $book->update([
             'title' => $validated['title'],
             'author' => $validated['author'],
@@ -72,16 +74,14 @@ class BookController extends Controller
 
         $book->genres()->sync($validated['genres'] ?? []);
 
-        $this->authorize('update', $book);
-
         return redirect()->route('books.show', $book)->with('success', '書籍を更新しました。');
     }
 
     public function destroy(Book $book): RedirectResponse
     {
-        $book->delete();
-
         $this->authorize('delete', $book);
+
+        $book->delete();
 
         return redirect()->route('books.index')->with('success', '書籍を削除しました。');
     }
