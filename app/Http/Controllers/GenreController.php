@@ -4,11 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreGenreRequest;
 use App\Http\Requests\UpdateGenreRequest;
-use Illuminate\Http\Request;
 use App\Models\Genre;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-
 
 class GenreController extends Controller
 {
@@ -54,4 +52,3 @@ class GenreController extends Controller
         return redirect()->route('genres.index')->with('success', 'ジャンルを削除しました。');
     }
 }
-
