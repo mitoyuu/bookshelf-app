@@ -18,27 +18,35 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-// 公開ページ
-Route::resource('books', BookController::class)
-    ->only(['index', 'show']);
-
-Route::get('/ranking', [RankingController::class, 'index']);
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 // ログイン必須
 Route::middleware('auth')->group(function () {
 
     Route::resource('books', BookController::class)
-        ->except(['index', 'show']);
+        ->except(['index', 'show']); //ゲスト
 
     Route::resource('genres', GenreController::class);
 
     Route::resource('favorites', FavoriteController::class)
         ->only(['index', 'store', 'destroy']);
 
+    // お気に入り
+    Route::post('/books/{book}/favorites', [FavoriteController::class, 'toggle'])
+        ->name('favorites.toggle');
+
+    // いいね
+    Route::post('/reviews/{review}/like', [ReviewController::class, 'toggle'])
+        ->name('reviews.like');
+
     Route::resource('reviews', ReviewController::class)
         ->only(['store', 'edit', 'update', 'destroy']);
 });
+
+// ゲストも閲覧可能
+Route::resource('books', BookController::class)
+    ->only(['index', 'show']);
+
+Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index');

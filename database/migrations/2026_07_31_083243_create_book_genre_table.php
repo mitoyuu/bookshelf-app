@@ -15,14 +15,10 @@ return new class extends Migration
             $table->foreignId('book_id')
                 ->constrained()
                 ->cascadeOnDelete();
-
             // 書籍がある場合は削除不可
             $table->foreignId('genre_id')
                 ->constrained();
-
-            $table->timestamps();
-
-            $table->unique(['book_id', 'genre_id']);
+            $table->primary(['book_id', 'genre_id']);
         });
     }
 
