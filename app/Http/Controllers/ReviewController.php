@@ -21,7 +21,7 @@ class ReviewController extends Controller
             'comment' => $validated['comment'],
         ]);
 
-        return redirect()->route('books.show', $book)->with('success', 'レビューを登録しました。');
+        return redirect()->route('books.show', $book)->with('success', 'レビューを投稿しました。');
     }
 
     public function edit(Review $review): View
