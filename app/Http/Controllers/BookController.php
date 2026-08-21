@@ -52,6 +52,8 @@ class BookController extends Controller
 
     public function edit(Book $book): View
     {
+        $this->authorize('update', $book);
+
         $genres = Genre::orderBy('name')->get();
 
         return view('books.edit', compact('book', 'genres'));
