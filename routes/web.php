@@ -49,6 +49,9 @@ Route::middleware('auth')->group(function () {
         ->only(['edit', 'update', 'destroy']);
     Route::post('/books/{book}/reviews', [ReviewController::class, 'store'])
         ->name('reviews.store');
+
+    // マイレポート一覧
+    // Route::get('/reports', [BookController::class, 'index']);
 });
 
 // ゲストも閲覧可能
