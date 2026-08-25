@@ -23,14 +23,14 @@ class BookController extends Controller
         $query = Book::with('genres')->withAvg('reviews', 'rating');
 
         // 3. キーワードが空でない場合のみ検索ロジックを実行（タイトル or 著者）
-        if (!empty($keyword)) {
+        if (! empty($keyword)) {
             $query->where(function ($q) use ($keyword) {
                 $q->where('title', 'LIKE', "%{$keyword}%")
                     ->orWhere('author', 'LIKE', "%{$keyword}%");
             });
         }
         // 4. ジャンル絞り込み
-        if (!empty($genreId)) {
+        if (! empty($genreId)) {
             $query->whereHas('genres', function ($q) use ($genreId) {
                 $q->where('genres.id', $genreId);
             });
