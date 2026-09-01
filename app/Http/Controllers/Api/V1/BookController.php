@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\IndexBookRequest;
+use App\Http\Requests\Api\V1\StoreBookRequest;
 use App\Http\Resources\Api\V1\BookResource;
 use App\Models\Book;
 
@@ -47,5 +48,30 @@ class BookController extends Controller
         $book->load(['genres', 'reviews.user']);
 
         return new BookResource($book);
+    }
+
+    public function store(StoreBookRequest $request)
+    {
+        $validated = $request->validated();
+
+        $book = Book::create([
+            'user_id' => $validated['user_id'],
+            // AP06：Sanctum認証追加後、下記へ変更する
+            // $request->user()->id,
+            'title' => $validated['title'],
+            'author' => $validated['author'],
+            'isbn' => $validated['isbn'] ?? null,
+            'published_date' => $validated['published_date'] ?? null,
+            'description' => $validated['description'] ?? null,
+            'image_url' => $validated['image_url'] ?? null,
+        ]);
+
+        $book->genres()->sync($validated['genres']);
+        $book->load('genres');
+
+        return (new BookResource($book))
+            ->response()
+            ->setStatusCode(201);
+
     }
 }

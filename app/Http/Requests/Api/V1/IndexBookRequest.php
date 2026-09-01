@@ -31,7 +31,7 @@ class IndexBookRequest extends FormRequest
 
             // ページネーション用
             'page' => ['nullable', 'integer', 'min:1'],
-            'per_page' => ['nullable', 'integer', 'min:1'],
+            'per_page' => ['nullable', 'integer', 'min:1', 'max:100'],
         ];
     }
 }
