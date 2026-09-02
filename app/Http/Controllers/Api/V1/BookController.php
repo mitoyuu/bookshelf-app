@@ -96,10 +96,10 @@ class BookController extends Controller
         return new BookResource($book);
     }
 
-    // public function destroy(Book $book)
-    // {
-    //     $book->delete();
+    public function destroy(Book $book)
+    {
+        $book->delete();
 
-    //     return response()->json(null, 204);
-    // }
+        return response()->json(null, 204);
+    }
 }
