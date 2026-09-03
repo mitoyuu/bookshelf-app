@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Book;
 use App\Models\Genre;
+use App\Models\Review;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -14,10 +15,15 @@ class BookControllerTest extends TestCase
 
     public function test_書籍一覧を表示できる(): void
     {
-        Book::factory()->count(2)->create();
+        $books = Book::factory()->count(2)->create();
 
-        $this->get(route('books.index'))
-            ->assertOk();
+        $response = $this->get(route('books.index'));
+
+        $response->assertOk();
+
+        foreach ($books as $book) {
+            $response->assertSee($book->title);
+        }
     }
 
     public function test_認証済みユーザーは書籍を登録できる(): void
@@ -107,13 +113,23 @@ class BookControllerTest extends TestCase
 
     public function test_書籍詳細を表示できる(): void
     {
+        $user = User::factory()->create();
+
         $book = Book::factory()->create([
             'title' => '詳細表示テスト',
         ]);
 
+        Review::factory()->create([
+            'user_id' => $user->id,
+            'book_id' => $book->id,
+            'rating' => 5,
+            'comment' => 'とても面白い本でした。',
+        ]);
+
         $this->get(route('books.show', $book))
             ->assertOk()
-            ->assertSee('詳細表示テスト');
+            ->assertSee('詳細表示テスト')
+            ->assertSee('とても面白い本でした。');
     }
 
     public function test_書籍の所有者は自分の書籍を更新できる(): void
@@ -155,6 +171,11 @@ class BookControllerTest extends TestCase
 
         $book = Book::factory()->for($user)->create();
 
+        $review = Review::factory()->create([
+            'user_id' => $user->id,
+            'book_id' => $book->id,
+        ]);
+
         $response = $this->actingAs($user)
             ->delete(route('books.destroy', $book));
 
@@ -162,6 +183,10 @@ class BookControllerTest extends TestCase
 
         $this->assertDatabaseMissing('books', [
             'id' => $book->id,
+        ]);
+
+        $this->assertDatabaseMissing('reviews', [
+            'id' => $review->id,
         ]);
     }
 }
