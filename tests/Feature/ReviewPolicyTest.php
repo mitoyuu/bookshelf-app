@@ -29,4 +29,42 @@ class ReviewPolicyTest extends TestCase
         $this->assertFalse($other->can('update', $review));
         $this->assertFalse($other->can('delete', $review));
     }
+
+    public function test_他人はレビューの編集画面を開けない(): void
+    {
+        $owner = User::factory()->create();
+        $other = User::factory()->create();
+
+        $book = Book::factory()->create();
+
+        $review = Review::factory()
+            ->for($owner)
+            ->for($book)
+            ->create();
+
+        $this->actingAs($other)
+            ->get(route('reviews.edit', $review))
+            ->assertForbidden();
+    }
+
+    public function test_他人はレビューを削除できない(): void
+    {
+        $owner = User::factory()->create();
+        $other = User::factory()->create();
+
+        $book = Book::factory()->create();
+
+        $review = Review::factory()
+            ->for($owner)
+            ->for($book)
+            ->create();
+
+        $this->actingAs($other)
+            ->delete(route('reviews.destroy', $review))
+            ->assertForbidden();
+
+        $this->assertDatabaseHas('reviews', [
+            'id' => $review->id,
+        ]);
+    }
 }

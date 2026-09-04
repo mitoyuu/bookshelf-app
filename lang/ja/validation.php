@@ -22,6 +22,7 @@ return [
     'min' => [
         'string' => ':attributeは:min文字以上で入力してください。',
         'numeric' => ':attributeは:min以上で指定してください。',
+        'array' => ':attributeは:min個以上選択してください。',
     ],
 
     'attributes' => [

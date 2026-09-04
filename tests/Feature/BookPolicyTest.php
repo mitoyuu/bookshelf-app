@@ -23,4 +23,32 @@ class BookPolicyTest extends TestCase
         $this->assertFalse($other->can('update', $book));
         $this->assertFalse($other->can('delete', $book));
     }
+
+    public function test_他人は書籍の編集画面を開けない(): void
+    {
+        $owner = User::factory()->create();
+        $other = User::factory()->create();
+
+        $book = Book::factory()->for($owner)->create();
+
+        $this->actingAs($other)
+            ->get(route('books.edit', $book))
+            ->assertForbidden();
+    }
+
+    public function test_他人は書籍を削除できない(): void
+    {
+        $owner = User::factory()->create();
+        $other = User::factory()->create();
+
+        $book = Book::factory()->for($owner)->create();
+
+        $this->actingAs($other)
+            ->delete(route('books.destroy', $book))
+            ->assertForbidden();
+
+        $this->assertDatabaseHas('books', [
+            'id' => $book->id,
+        ]);
+    }
 }
