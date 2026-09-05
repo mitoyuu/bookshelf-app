@@ -56,9 +56,7 @@ class BookController extends Controller
         $validated = $request->validated();
 
         $book = Book::create([
-            'user_id' => $validated['user_id'],
-            // AP06：Sanctum認証追加後、下記へ変更する
-            // $request->user()->id,
+            'user_id' => $request->user()->id,
             'title' => $validated['title'],
             'author' => $validated['author'],
             'isbn' => $validated['isbn'] ?? null,
@@ -78,10 +76,11 @@ class BookController extends Controller
 
     public function update(UpdateBookRequest $request, Book $book)
     {
+        $this->authorize('update', $book);
+
         $validated = $request->validated();
 
         $book->update([
-            'user_id' => $validated['user_id'],
             'title' => $validated['title'],
             'author' => $validated['author'],
             'isbn' => $validated['isbn'] ?? null,
@@ -98,6 +97,8 @@ class BookController extends Controller
 
     public function destroy(Book $book)
     {
+        $this->authorize('delete', $book);
+
         $book->delete();
 
         return response()->json(null, 204);
