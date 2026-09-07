@@ -28,6 +28,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('books', BookController::class)
         ->except(['index', 'show']); // ゲスト
 
+    // ISBN検索
+    Route::get('/books/isbn/{isbn}', [BookController::class, 'searchByIsbn'])
+        ->name('books.isbn');
+
     Route::resource('genres', GenreController::class);
 
     Route::resource('favorites', FavoriteController::class)
