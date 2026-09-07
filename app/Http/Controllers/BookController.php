@@ -6,8 +6,10 @@ use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 use App\Models\Book;
 use App\Models\Genre;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\View\View;
 
 class BookController extends Controller
@@ -64,6 +66,58 @@ class BookController extends Controller
         $genres = Genre::orderBy('name')->get();
 
         return view('books.index', compact('books', 'keyword', 'genres', 'genreId', 'sort'));
+    }
+
+    /**
+     * ISBNを使用してGoogle Books APIから書籍情報を取得する。
+     *
+     * @param  string  $isbn  ISBN-13
+     */
+    public function searchByIsbn(string $isbn): JsonResponse
+    {
+        // ISBNが13桁の数字ではない場合
+        if (! preg_match('/^\d{13}$/', $isbn)) {
+            return response()->json([
+                'error' => 'ISBNは13桁で入力してください。',
+            ], 422);
+        }
+
+        // Google Books APIへ問い合わせ
+        $url = 'https://www.googleapis.com/books/v1/volumes';
+
+        $response = Http::get($url, [
+            'q' => "isbn:{$isbn}",
+            'key' => config('services.google_books.api_key'),
+        ]);
+
+        // Google Books APIとの通信に失敗した場合
+        if ($response->failed()) {
+            return response()->json([
+                'error' => 'Google Books APIとの通信に失敗しました。',
+            ], 502);
+        }
+
+        $data = $response->json();
+
+        // 該当する書籍が見つからなかった場合
+        if (empty($data['items'])) {
+            return response()->json([
+                'error' => '該当する書籍が見つかりませんでした。',
+            ], 404);
+        }
+
+        // Googleのレスポンスから必要な部分だけ取得
+        $volumeInfo = $data['items'][0]['volumeInfo'] ?? [];
+
+        // 最後にJSONを返す
+        return response()->json([
+            'title' => $volumeInfo['title'] ?? '',
+            'author' => implode(', ', $volumeInfo['authors'] ?? []),
+            'isbn' => $isbn,
+            'published_date' => $volumeInfo['publishedDate'] ?? '',
+            'description' => $volumeInfo['description'] ?? '',
+            'image_url' => $volumeInfo['imageLinks']['thumbnail'] ?? '',
+        ]);
     }
 
     public function create(): View
