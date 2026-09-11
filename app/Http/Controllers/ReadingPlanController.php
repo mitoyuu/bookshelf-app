@@ -2,17 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ReadingPlanStatus;
 use App\Http\Requests\StoreReadingPlanRequest;
-use App\Model\App\Models\ReadingPlan;
+use App\Models\ReadingPlan;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ReadingPlanController extends Controller
 {
-    public function index(Request $request): View
+    public function index(): View
     {
-        //
+        // ログイン中のユーザーの読書計画を取得する
+        $user = auth()->user();
+
+        $currentStatus = request('status');
+
+        $status = $currentStatus
+            ? ReadingPlanStatus::tryFrom($currentStatus)
+            : null;
+
+        $readingPlansQuery = $user->readingPlans()
+            ->with('book');
+
+        if ($status) {
+            $readingPlansQuery->where('status', $status);
+        }
+
+        $readingPlans = $readingPlansQuery->get();
+
+        return view(
+            'reading-plans.index',
+            compact('readingPlans', 'currentStatus')
+        );
     }
 
     public function store(StoreReadingPlanRequest $request): RedirectResponse
