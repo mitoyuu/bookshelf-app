@@ -42,5 +42,7 @@ return [
         'page' => 'ページ番号',
         'user_id' => '登録者',
         'keyword' => 'キーワード',
+        'book_id' => '書籍',
+        'target_date' => '期日',
     ],
 ];

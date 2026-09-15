@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\ReadingPlanStatus;
 use App\Http\Requests\StoreReadingPlanRequest;
+use App\Models\Book;
 use App\Models\ReadingPlan;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -36,13 +37,25 @@ class ReadingPlanController extends Controller
         );
     }
 
+    public function create(): View
+    {
+        $books = Book::all();
+
+        return view('reading-plans.create', compact('books'));
+    }
+
     public function store(StoreReadingPlanRequest $request): RedirectResponse
     {
+        $user = auth()->user();
+
         ReadingPlan::create([
-            'user_id' => 1,
-            'book_id' => 3,
-            'target_date' => today(),
+            'user_id' => $user->id,
+            'book_id' => $request->book_id,
+            'target_date' => $request->target_date,
             'status' => ReadingPlanStatus::InProgress,
+            'completed_at' => null,
         ]);
+
+        return redirect()->route('reading-plans.index');
     }
 }
