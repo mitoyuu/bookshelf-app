@@ -22,4 +22,12 @@ class ReadingPlanPolicy
     {
         return $user->id === $readingPlan->user_id;
     }
+
+    /**
+     * Determine whether the user can complete the reading plan.
+     */
+    public function complete(User $user, ReadingPlan $readingPlan): bool
+    {
+        return $user->id === $readingPlan->user_id;
+    }
 }

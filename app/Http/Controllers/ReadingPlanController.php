@@ -12,6 +12,9 @@ use Illuminate\View\View;
 
 class ReadingPlanController extends Controller
 {
+    /**
+     * Display the reading plans.
+     */
     public function index(): View
     {
         // ログイン中のユーザーの読書計画を取得する
@@ -38,6 +41,9 @@ class ReadingPlanController extends Controller
         );
     }
 
+    /**
+     * Show the form for creating a reading plan.
+     */
     public function create(): View
     {
         $books = Book::all();
@@ -45,6 +51,9 @@ class ReadingPlanController extends Controller
         return view('reading-plans.create', compact('books'));
     }
 
+    /**
+     * Store a newly created reading plan.
+     */
     public function store(StoreReadingPlanRequest $request): RedirectResponse
     {
         $user = auth()->user();
@@ -57,9 +66,12 @@ class ReadingPlanController extends Controller
             'completed_at' => null,
         ]);
 
-        return redirect()->route('reading-plans.index')->with('success', '読書計画を登録しました。');
+        return redirect()->route('reading-plans.index')->with('success', '読書計画を作成しました。');
     }
 
+    /**
+     * Show the form for editing a reading plan.
+     */
     public function edit(ReadingPlan $readingPlan): View
     {
         $this->authorize('update', $readingPlan);
@@ -67,6 +79,9 @@ class ReadingPlanController extends Controller
         return view('reading-plans.edit', compact('readingPlan'));
     }
 
+    /**
+     * Update the specified reading plan.
+     */
     public function update(UpdateReadingPlanRequest $request, ReadingPlan $readingPlan): RedirectResponse
     {
         $this->authorize('update', $readingPlan);
@@ -80,6 +95,9 @@ class ReadingPlanController extends Controller
         return redirect()->route('reading-plans.index')->with('success', '読書計画を更新しました。');
     }
 
+    /**
+     * Remove the specified reading plan.
+     */
     public function destroy(ReadingPlan $readingPlan): RedirectResponse
     {
         $this->authorize('delete', $readingPlan);
@@ -87,5 +105,21 @@ class ReadingPlanController extends Controller
         $readingPlan->delete();
 
         return redirect()->route('reading-plans.index')->with('success', '読書計画を削除しました。');
+    }
+
+    /**
+     * Complete the reading plan.
+     */
+    public function complete(ReadingPlan $readingPlan): RedirectResponse
+    {
+        $this->authorize('complete', $readingPlan);
+
+        $readingPlan->update([
+            'status' => ReadingPlanStatus::Completed,
+            'completed_at' => now(),
+        ]);
+
+        return redirect()->route('reading-plans.index')
+            ->with('success', '読書計画を完了しました。');
     }
 }
