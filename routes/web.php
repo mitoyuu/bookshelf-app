@@ -3,6 +3,7 @@
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\GenreController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RankingController;
 use App\Http\Controllers\ReadingPlanController;
 use App\Http\Controllers\ReportController;
@@ -46,10 +47,6 @@ Route::middleware('auth')->group(function () {
     // いいね
     Route::post('/reviews/{review}/like', [ReviewController::class, 'toggle'])
         ->name('reviews.like');
-    // routes/web.php （または routes/api.php）
-    // Route::middleware(['auth'])->group(function () {
-    //     Route::post('/reviews/{review}/like', [ReviewController::class, 'toggle'])->name('reviews.like.toggle');
-    // });
 
     Route::resource('reviews', ReviewController::class)
         ->only(['edit', 'update', 'destroy']);
@@ -66,6 +63,13 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/reading-plans/{reading_plan}/complete', [ReadingPlanController::class, 'complete'])
         ->name('reading-plans.complete');
+
+    // 通知
+    Route::get('/notifications', [NotificationController::class, 'index'])
+        ->name('notifications.index');
+
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'read'])
+        ->name('notifications.read');
 });
 
 // ゲストも閲覧可能
