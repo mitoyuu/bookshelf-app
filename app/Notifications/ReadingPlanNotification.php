@@ -13,6 +13,7 @@ class ReadingPlanNotification extends Notification
      * Create a new notification instance.
      */
     public function __construct(
+        private int $readingPlanId,
         private string $title,
         private string $body,
         private string $timing,
@@ -38,6 +39,7 @@ class ReadingPlanNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
+            'reading_plan_id' => $this->readingPlanId,
             'title' => $this->title,
             'body' => $this->body,
             'timing' => $this->timing,
