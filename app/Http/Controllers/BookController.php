@@ -19,7 +19,7 @@ class BookController extends Controller
         // 1. クエリパラメータ（keyword, genre, sort）を取得
         $keyword = $request->input('keyword');
         $genreId = $request->input('genre');
-        $sort = $request->input('sort', 'newest'); // デフォルトは 'latest'と機能要件一覧にはあり
+        $sort = $request->input('sort', 'newest');
 
         // 2. クエリビルダの初期化（レビューの平均評価も一緒に取得する）
         $query = Book::with('genres')->withAvg('reviews', 'rating');
@@ -52,7 +52,7 @@ class BookController extends Controller
                 // レビューがない（NULL）ものを最後にしつつ、評価が高い順に並べる
                 $query->orderByRaw('reviews_avg_rating IS NULL, reviews_avg_rating DESC');
                 break;
-            case 'latest':
+            case 'newest':
             default:
                 // 登録日が新しい順（デフォルト）
                 $query->orderBy('created_at', 'desc');
