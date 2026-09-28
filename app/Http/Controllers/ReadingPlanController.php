@@ -13,7 +13,11 @@ use Illuminate\View\View;
 class ReadingPlanController extends Controller
 {
     /**
-     * Display the reading plans.
+     * 読書計画一覧を表示する。
+     *
+     * ログインユーザーの読書計画を取得し、指定されたステータスがある場合は絞り込んで表示する。
+     *
+     * @return View 読書計画一覧画面
      */
     public function index(): View
     {
@@ -42,7 +46,9 @@ class ReadingPlanController extends Controller
     }
 
     /**
-     * Show the form for creating a reading plan.
+     * 読書計画作成画面を表示する。
+     *
+     * @return View 読書計画作成画面
      */
     public function create(): View
     {
@@ -52,7 +58,12 @@ class ReadingPlanController extends Controller
     }
 
     /**
-     * Store a newly created reading plan.
+     * 新しい読書計画を作成する。
+     *
+     * 作成時のステータスは進行中とし、完了日時は未設定にする。
+     *
+     * @param  StoreReadingPlanRequest  $request  読書計画作成リクエスト
+     * @return RedirectResponse 読書計画一覧画面へのリダイレクト
      */
     public function store(StoreReadingPlanRequest $request): RedirectResponse
     {
@@ -70,7 +81,10 @@ class ReadingPlanController extends Controller
     }
 
     /**
-     * Show the form for editing a reading plan.
+     * 指定した読書計画の編集画面を表示する。
+     *
+     * @param  ReadingPlan  $readingPlan  編集対象の読書計画
+     * @return View 読書計画編集画面
      */
     public function edit(ReadingPlan $readingPlan): View
     {
@@ -80,7 +94,13 @@ class ReadingPlanController extends Controller
     }
 
     /**
-     * Update the specified reading plan.
+     * 指定した読書計画を更新する。
+     *
+     * Policyによる認可を行ったうえで、読書計画の期日を更新する。
+     *
+     * @param  UpdateReadingPlanRequest  $request  読書計画更新リクエスト
+     * @param  ReadingPlan  $readingPlan  更新対象の読書計画
+     * @return RedirectResponse 読書計画一覧画面へのリダイレクト
      */
     public function update(UpdateReadingPlanRequest $request, ReadingPlan $readingPlan): RedirectResponse
     {
@@ -96,7 +116,12 @@ class ReadingPlanController extends Controller
     }
 
     /**
-     * Remove the specified reading plan.
+     * 指定した読書計画を削除する。
+     *
+     * Policyによる認可を行ったうえで、読書計画を削除する。
+     *
+     * @param  ReadingPlan  $readingPlan  削除対象の読書計画
+     * @return RedirectResponse 読書計画一覧画面へのリダイレクト
      */
     public function destroy(ReadingPlan $readingPlan): RedirectResponse
     {
@@ -108,7 +133,12 @@ class ReadingPlanController extends Controller
     }
 
     /**
-     * Complete the reading plan.
+     * 指定した読書計画を完了状態にする。
+     *
+     * ステータスを完了に変更し、完了日時を記録する。
+     *
+     * @param  ReadingPlan  $readingPlan  完了対象の読書計画
+     * @return RedirectResponse 読書計画一覧画面へのリダイレクト
      */
     public function complete(ReadingPlan $readingPlan): RedirectResponse
     {

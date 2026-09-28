@@ -11,6 +11,13 @@ use Illuminate\View\View;
 
 class ReviewController extends Controller
 {
+    /**
+     * 指定した書籍にレビューを投稿する。
+     *
+     * @param  StoreReviewRequest  $request  レビュー投稿リクエスト
+     * @param  Book  $book  レビュー対象の書籍
+     * @return RedirectResponse 書籍詳細画面へのリダイレクト
+     */
     public function store(StoreReviewRequest $request, Book $book): RedirectResponse
     {
         $validated = $request->validated();
@@ -24,6 +31,12 @@ class ReviewController extends Controller
         return redirect()->route('books.show', $book)->with('success', 'レビューを投稿しました。');
     }
 
+    /**
+     * 指定したレビューの編集画面を表示する。
+     *
+     * @param  Review  $review  編集対象のレビュー
+     * @return View レビュー編集画面
+     */
     public function edit(Review $review): View
     {
         $this->authorize('update', $review);
@@ -31,6 +44,13 @@ class ReviewController extends Controller
         return view('reviews.edit', compact('review'));
     }
 
+    /**
+     * 指定したレビューを更新する。
+     *
+     * @param  UpdateReviewRequest  $request  レビュー更新リクエスト
+     * @param  Review  $review  更新対象のレビュー
+     * @return RedirectResponse 書籍詳細画面へのリダイレクト
+     */
     public function update(UpdateReviewRequest $request, Review $review): RedirectResponse
     {
         $validated = $request->validated();
@@ -45,6 +65,12 @@ class ReviewController extends Controller
         return redirect()->route('books.show', $review->book)->with('success', 'レビューを更新しました。');
     }
 
+    /**
+     * 指定したレビューを削除する。
+     *
+     * @param  Review  $review  削除対象のレビュー
+     * @return RedirectResponse 書籍詳細画面へのリダイレクト
+     */
     public function destroy(Review $review): RedirectResponse
     {
         $this->authorize('delete', $review);
@@ -55,7 +81,12 @@ class ReviewController extends Controller
     }
 
     /**
-     * レビューのいいねをトグルする
+     * 指定したレビューのいいね状態を切り替える。
+     *
+     * すでにいいねしている場合は解除し、いいねしていない場合は追加する。
+     *
+     * @param  Review  $review  いいね対象のレビュー
+     * @return RedirectResponse 直前のページへのリダイレクト
      */
     public function toggle(Review $review): RedirectResponse
     {

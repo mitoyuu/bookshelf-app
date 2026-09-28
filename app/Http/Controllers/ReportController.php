@@ -7,7 +7,12 @@ use Illuminate\View\View;
 class ReportController extends Controller
 {
     /**
-     * マイ読書レポートを表示する
+     * マイ読書レポートを表示する。
+     *
+     * ログインユーザーのレビューをもとに、レビュー集計・評価分布・
+     * 高評価書籍・ジャンル別評価などの読書レポートを作成して表示する。
+     *
+     * @return View マイ読書レポート画面
      */
     public function index(): View
     {
