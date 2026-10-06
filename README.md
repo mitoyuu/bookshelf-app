@@ -17,14 +17,14 @@
 
 ## 環境構築手順
 
-1. リポジトリをクローンする
+### 1. リポジトリをクローンする
 
 ```bash
 git clone https://github.com/mitoyuu/bookshelf-app.git
 cd bookshelf-app
 ```
 
-2. `.env` ファイルを作成する
+### 2. `.env` ファイルを作成する
 
 ```bash
 cp .env.example .env
@@ -32,7 +32,7 @@ cp .env.example .env
 
 `.env.example` にはDocker/Sailで使用するMySQLの接続情報を設定しています。
 
-3. Composerパッケージをインストールする
+### 3. Composerパッケージをインストールする
 
 ローカル環境にComposerを用意していない場合は、Docker経由でインストールできます。
 
@@ -45,7 +45,7 @@ docker run --rm \
     composer install --ignore-platform-reqs
 ```
 
-4. コンテナを起動する
+### 4. コンテナを起動する
 
 ```bash
 ./vendor/bin/sail up -d
@@ -57,13 +57,13 @@ Sailのエイリアスを設定している場合は、以降のコマンドを 
 sail up -d
 ```
 
-5. アプリケーションキーを生成する
+### 5. アプリケーションキーを生成する
 
 ```bash
 sail artisan key:generate
 ```
 
-6. マイグレーションと初期データを投入する
+### 6. マイグレーションと初期データを投入する
 
 ```bash
 sail artisan migrate --seed
@@ -76,20 +76,20 @@ sail artisan migrate:fresh --seed
 ```
 
 
-7. フロントエンドの依存パッケージをインストールする
+### 7. フロントエンドの依存パッケージをインストールする
 
 ```bash
 sail npm install
 ```
 
-8. Viteを起動する
+### 8. Viteを起動する
 
 ```bash
 sail npm run dev
 ```
 開発中はVite開発サーバーを起動した状態で使用してください。
 
-9. ブラウザで http://localhost/books にアクセスする
+### 9. ブラウザで http://localhost/books にアクセスする
 
 ### Google Books APIを使用する場合
 
