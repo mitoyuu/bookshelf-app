@@ -21,9 +21,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::redirect('/', '/books');
 
 // ログイン必須
 Route::middleware('auth')->group(function () {

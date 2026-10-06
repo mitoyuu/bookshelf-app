@@ -13,14 +13,3 @@ Route::prefix('v1')->group(function () {
         ->only(['store', 'update', 'destroy'])
         ->middleware('auth:sanctum');
 });
-// ⇧
-// GET     /api/v1/books
-// GET     /api/v1/books/{book}
-// POST    /api/v1/books
-// PUT     /api/v1/books/{book}
-// DELETE  /api/v1/books/{book}
-// という5つのルートがまとめて作られる
-
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });

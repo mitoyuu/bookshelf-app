@@ -9,7 +9,10 @@ use Illuminate\View\View;
 class NotificationController extends Controller
 {
     /**
-     * Display the user's notifications.
+     * ログインユーザーの通知一覧を表示する。
+     *
+     * @param  Request  $request  HTTPリクエスト
+     * @return View 通知一覧画面
      */
     public function index(Request $request): View
     {
@@ -21,7 +24,11 @@ class NotificationController extends Controller
     }
 
     /**
-     * Mark the notification as read.
+     * 指定した通知を既読にする。
+     *
+     * @param  Request  $request  HTTPリクエスト
+     * @param  string  $id  通知ID
+     * @return RedirectResponse 通知一覧画面へのリダイレクト
      */
     public function read(Request $request, string $id): RedirectResponse
     {

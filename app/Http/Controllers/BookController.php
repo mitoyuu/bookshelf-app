@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SearchBookByIsbnRequest;
 use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 use App\Models\Book;
@@ -14,6 +15,14 @@ use Illuminate\View\View;
 
 class BookController extends Controller
 {
+    /**
+     * 書籍一覧を表示する。
+     *
+     * キーワード・ジャンル・ソート条件に応じて書籍を検索・絞り込みする。
+     *
+     * @param  Request  $request  検索・絞り込み・ソート条件を含むリクエスト
+     * @return View 書籍一覧画面
+     */
     public function index(Request $request): View
     {
         // 1. クエリパラメータ（keyword, genre, sort）を取得
@@ -72,15 +81,11 @@ class BookController extends Controller
      * ISBNを使用してGoogle Books APIから書籍情報を取得する。
      *
      * @param  string  $isbn  ISBN-13
+     * @return JsonResponse Google Books APIから取得した書籍情報
      */
-    public function searchByIsbn(string $isbn): JsonResponse
+    public function searchByIsbn(SearchBookByIsbnRequest $request): JsonResponse
     {
-        // ISBNが13桁の数字ではない場合
-        if (! preg_match('/^\d{13}$/', $isbn)) {
-            return response()->json([
-                'error' => 'ISBNは13桁で入力してください。',
-            ], 422);
-        }
+        $isbn = $request->route('isbn');
 
         // Google Books APIへ問い合わせ
         $url = 'https://www.googleapis.com/books/v1/volumes';
@@ -120,6 +125,11 @@ class BookController extends Controller
         ]);
     }
 
+    /**
+     * 書籍登録画面を表示する。
+     *
+     * @return View 書籍登録画面
+     */
     public function create(): View
     {
         $genres = Genre::orderBy('name')->get();
@@ -127,6 +137,12 @@ class BookController extends Controller
         return view('books.create', compact('genres'));
     }
 
+    /**
+     * 書籍を登録する。
+     *
+     * @param  StoreBookRequest  $request  書籍登録用のバリデーション済みリクエスト
+     * @return RedirectResponse 書籍詳細画面へのリダイレクト
+     */
     public function store(StoreBookRequest $request): RedirectResponse
     {
         $validated = $request->validated();
@@ -145,6 +161,12 @@ class BookController extends Controller
         return redirect()->route('books.show', $book)->with('success', '書籍を登録しました。');
     }
 
+    /**
+     * 書籍詳細画面を表示する。
+     *
+     * @param  Book  $book  表示する書籍
+     * @return View 書籍詳細画面
+     */
     public function show(Book $book): View
     {
         $book->load(['genres', 'user']);
@@ -152,6 +174,12 @@ class BookController extends Controller
         return view('books.show', compact('book'));
     }
 
+    /**
+     * 書籍編集画面を表示する。
+     *
+     * @param  Book  $book  編集する書籍
+     * @return View 書籍編集画面
+     */
     public function edit(Book $book): View
     {
         $this->authorize('update', $book);
@@ -161,6 +189,13 @@ class BookController extends Controller
         return view('books.edit', compact('book', 'genres'));
     }
 
+    /**
+     * 書籍情報を更新する。
+     *
+     * @param  UpdateBookRequest  $request  書籍更新用のバリデーション済みリクエスト
+     * @param  Book  $book  更新する書籍
+     * @return RedirectResponse 書籍詳細画面へのリダイレクト
+     */
     public function update(UpdateBookRequest $request, Book $book): RedirectResponse
     {
         $this->authorize('update', $book);
@@ -181,6 +216,12 @@ class BookController extends Controller
         return redirect()->route('books.show', $book)->with('success', '書籍情報を更新しました。');
     }
 
+    /**
+     * 書籍を削除する。
+     *
+     * @param  Book  $book  削除する書籍
+     * @return RedirectResponse 書籍一覧画面へのリダイレクト
+     */
     public function destroy(Book $book): RedirectResponse
     {
         $this->authorize('delete', $book);
