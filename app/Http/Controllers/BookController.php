@@ -99,7 +99,7 @@ class BookController extends Controller
         if ($response->failed()) {
             return response()->json([
                 'error' => 'Google Books APIとの通信に失敗しました。',
-            ], 502);
+            ], 500);
         }
 
         $data = $response->json();

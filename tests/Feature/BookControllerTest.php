@@ -498,7 +498,7 @@ class BookControllerTest extends TestCase
             ]);
     }
 
-    public function test_google_books_ap_iとの通信に失敗した場合は502を返す(): void
+    public function test_google_books_ap_iとの通信に失敗した場合は500を返す(): void
     {
         $user = User::factory()->create();
 
@@ -515,7 +515,7 @@ class BookControllerTest extends TestCase
             'isbn' => '9781234567890',
         ]));
 
-        $response->assertStatus(502)
+        $response->assertStatus(500)
             ->assertJson([
                 'error' => 'Google Books APIとの通信に失敗しました。',
             ]);
